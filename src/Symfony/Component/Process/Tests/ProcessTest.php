@@ -415,6 +415,18 @@ class ProcessTest extends TestCase
         $this->assertSame('0', $p->getOutput());
     }
 
+    public function testOutputDirInWindows()
+    {
+        if ('\\' !== DIRECTORY_SEPARATOR) {
+            $this->markTestSkipped('This test is for Windows platform only');
+        }
+
+        $process = $this->getProcess('dir');
+        $process->mustRun();
+
+        $this->assertNotEmpty($process->getOutput());
+    }
+
     public function testExitCodeCommandFailed()
     {
         if ('\\' === DIRECTORY_SEPARATOR) {
