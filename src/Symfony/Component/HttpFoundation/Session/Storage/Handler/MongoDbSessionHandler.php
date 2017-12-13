@@ -80,13 +80,21 @@ class MongoDbSessionHandler extends AbstractSessionHandler
         }
 
         $this->mongo = $mongo;
-
+        $this->open(null, 'mongodb');
         $this->options = array_merge(array(
             'id_field' => '_id',
             'data_field' => 'data',
             'time_field' => 'time',
             'expiry_field' => 'expires_at',
         ), $options);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function open($savePath, $sessionName)
+    {
+        return parent::open($savePath, $sessionName);
     }
 
     /**
