@@ -761,8 +761,8 @@ abstract class FrameworkExtensionTest extends TestCase
     public function testValidationStrictEmail()
     {
         $container = $this->createContainerFromFile('validation_strict_email');
-
-        $this->assertTrue($container->getDefinition('validator.email')->getArgument(0));
+        $isValidatorEmailArgument = $container->getDefinition('validator.email')->getArgument(0) ? true : false;
+        $this->assertTrue($isValidatorEmailArgument);
     }
 
     public function testValidationMapping()
