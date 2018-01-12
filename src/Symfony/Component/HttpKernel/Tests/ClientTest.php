@@ -98,6 +98,7 @@ class ClientTest extends TestCase
     {
         $source = tempnam(sys_get_temp_dir(), 'source');
         $target = sys_get_temp_dir().'/sf.moved.file';
+        file_put_contents($source, 'sééééééééééééééééééééééééééééééééééééééééééééééééééééééééééézaza');
         @unlink($target);
 
         $kernel = new TestHttpKernel();
