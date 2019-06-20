@@ -105,23 +105,41 @@ class HeaderBag implements \IteratorAggregate, \Countable
      * @param string|null $default The default value
      * @param bool        $first   Whether to return the first value or all header values
      *
-     * @return string|string[]|null The first header value or default value if $first is true, an array of values otherwise
+     * @return string|string[]|int|null The first header value or default value if $first is true, an array of values otherwise
      */
     public function get($key, $default = null, $first = true)
+    {
+        // do we trigger an deprecation ?
+        // @trigger_error(sprintf('%s::%s is deprecated since Symfony 4.4, use %s::getFirst() or %s::getAll() instead.', __CLASS__, __METHOD__, __CLASS__, __CLASS__), E_USER_DEPRECATED);
+        if (true === $first) {
+            return $this->getFirst($key, $default);
+        }
+
+        return $this->getAll($key, $default);
+    }
+
+    public function getFirst($key, $default = null)
+    {
+        $all = $this->getAll($key, $default);
+
+        if (\count($all)) {
+            return isset($all[0]) ? $all[0] : null;
+        }
+
+        return $default;
+    }
+
+    public function getAll($key, $default = null): array
     {
         $key = str_replace('_', '-', strtolower($key));
         $headers = $this->all();
 
         if (!\array_key_exists($key, $headers)) {
             if (null === $default) {
-                return $first ? null : [];
+                return [];
             }
 
-            return $first ? $default : [$default];
-        }
-
-        if ($first) {
-            return \count($headers[$key]) ? $headers[$key][0] : $default;
+            return [$default];
         }
 
         return $headers[$key];

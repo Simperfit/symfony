@@ -93,10 +93,15 @@ class HeaderBagTest extends TestCase
         // defaults
         $this->assertNull($bag->get('none'), '->get unknown values returns null');
         $this->assertEquals('default', $bag->get('none', 'default'), '->get unknown values returns default');
+        $this->assertEquals($bag->getFirst('none', 'default'), $bag->get('none', 'default'), '->get unknown values returns default as array');
+
         $this->assertEquals(['default'], $bag->get('none', 'default', false), '->get unknown values returns default as array');
+        $this->assertEquals($bag->getAll('none', 'default'), $bag->get('none', 'default', false), '->get unknown values returns default as array');
 
         $bag->set('foo', 'bor', false);
         $this->assertEquals('bar', $bag->get('foo'), '->get return first value');
+        $this->assertEquals($bag->getAll('foo', 'nope'), $bag->get('foo', 'nope', false), '->get return all values as array');
+
         $this->assertEquals(['bar', 'bor'], $bag->get('foo', 'nope', false), '->get return all values as array');
     }
 
