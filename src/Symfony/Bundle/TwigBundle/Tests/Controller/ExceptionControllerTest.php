@@ -73,7 +73,7 @@ class ExceptionControllerTest extends TestCase
         $response = $controller->showAction($request, $exception);
 
         $this->assertEquals('json', $request->getRequestFormat());
-        $this->assertEquals($request->getMimeType('json'), $response->headers->get('Content-Type'));
+        $this->assertEquals($request->getMimeType('json'), $response->headers->getValue('Content-Type'));
     }
 
     private function createRequest($requestFormat)

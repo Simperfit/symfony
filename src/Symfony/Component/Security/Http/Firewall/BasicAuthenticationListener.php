@@ -62,7 +62,7 @@ class BasicAuthenticationListener implements ListenerInterface
     {
         $request = $event->getRequest();
 
-        if (null === $username = $request->headers->get('PHP_AUTH_USER')) {
+        if (null === $username = $request->headers->getValue('PHP_AUTH_USER')) {
             return;
         }
 
@@ -77,7 +77,7 @@ class BasicAuthenticationListener implements ListenerInterface
         }
 
         try {
-            $token = $this->authenticationManager->authenticate(new UsernamePasswordToken($username, $request->headers->get('PHP_AUTH_PW'), $this->providerKey));
+            $token = $this->authenticationManager->authenticate(new UsernamePasswordToken($username, $request->headers->getValue('PHP_AUTH_PW'), $this->providerKey));
 
             $this->migrateSession($request, $token);
 

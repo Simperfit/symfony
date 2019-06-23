@@ -26,7 +26,7 @@ class BasicAuthenticationEntryPointTest extends TestCase
         $entryPoint = new BasicAuthenticationEntryPoint('TheRealmName');
         $response = $entryPoint->start($request, $authException);
 
-        $this->assertEquals('Basic realm="TheRealmName"', $response->headers->get('WWW-Authenticate'));
+        $this->assertEquals('Basic realm="TheRealmName"', $response->headers->getValue('WWW-Authenticate'));
         $this->assertEquals(401, $response->getStatusCode());
     }
 
@@ -38,7 +38,7 @@ class BasicAuthenticationEntryPointTest extends TestCase
 
         $response = $entryPoint->start($request);
 
-        $this->assertEquals('Basic realm="TheRealmName"', $response->headers->get('WWW-Authenticate'));
+        $this->assertEquals('Basic realm="TheRealmName"', $response->headers->getValue('WWW-Authenticate'));
         $this->assertEquals(401, $response->getStatusCode());
     }
 }

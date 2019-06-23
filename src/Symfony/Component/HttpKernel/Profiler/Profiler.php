@@ -67,7 +67,7 @@ class Profiler implements ResetInterface
      */
     public function loadProfileFromResponse(Response $response)
     {
-        if (!$token = $response->headers->get('X-Debug-Token')) {
+        if (!$token = $response->headers->getValue('X-Debug-Token')) {
             return false;
         }
 
@@ -157,7 +157,7 @@ class Profiler implements ResetInterface
             $profile->setIp('Unknown');
         }
 
-        if ($prevToken = $response->headers->get('X-Debug-Token')) {
+        if ($prevToken = $response->headers->getValue('X-Debug-Token')) {
             $response->headers->set('X-Previous-Debug-Token', $prevToken);
         }
 

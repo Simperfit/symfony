@@ -53,7 +53,7 @@ abstract class AbstractSurrogate implements SurrogateInterface
      */
     public function hasSurrogateCapability(Request $request)
     {
-        if (null === $value = $request->headers->get('Surrogate-Capability')) {
+        if (null === $value = $request->headers->getValue('Surrogate-Capability')) {
             return false;
         }
 
@@ -65,7 +65,7 @@ abstract class AbstractSurrogate implements SurrogateInterface
      */
     public function addSurrogateCapability(Request $request)
     {
-        $current = $request->headers->get('Surrogate-Capability');
+        $current = $request->headers->getValue('Surrogate-Capability');
         $new = sprintf('symfony="%s/1.0"', strtoupper($this->getName()));
 
         $request->headers->set('Surrogate-Capability', $current ? $current.', '.$new : $new);
@@ -76,7 +76,7 @@ abstract class AbstractSurrogate implements SurrogateInterface
      */
     public function needsParsing(Response $response)
     {
-        if (!$control = $response->headers->get('Surrogate-Control')) {
+        if (!$control = $response->headers->getValue('Surrogate-Control')) {
             return false;
         }
 
@@ -120,7 +120,7 @@ abstract class AbstractSurrogate implements SurrogateInterface
             return;
         }
 
-        $value = $response->headers->get('Surrogate-Control');
+        $value = $response->headers->getValue('Surrogate-Control');
         $upperName = strtoupper($this->getName());
 
         if (sprintf('content="%s/1.0"', $upperName) == $value) {

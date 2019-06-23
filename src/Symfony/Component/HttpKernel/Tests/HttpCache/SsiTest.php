@@ -40,10 +40,10 @@ class SsiTest extends TestCase
 
         $request = Request::create('/');
         $ssi->addSurrogateCapability($request);
-        $this->assertEquals('symfony="SSI/1.0"', $request->headers->get('Surrogate-Capability'));
+        $this->assertEquals('symfony="SSI/1.0"', $request->headers->getValue('Surrogate-Capability'));
 
         $ssi->addSurrogateCapability($request);
-        $this->assertEquals('symfony="SSI/1.0", symfony="SSI/1.0"', $request->headers->get('Surrogate-Capability'));
+        $this->assertEquals('symfony="SSI/1.0", symfony="SSI/1.0"', $request->headers->getValue('Surrogate-Capability'));
     }
 
     public function testAddSurrogateControl()
@@ -52,11 +52,11 @@ class SsiTest extends TestCase
 
         $response = new Response('foo <!--#include virtual="" -->');
         $ssi->addSurrogateControl($response);
-        $this->assertEquals('content="SSI/1.0"', $response->headers->get('Surrogate-Control'));
+        $this->assertEquals('content="SSI/1.0"', $response->headers->getValue('Surrogate-Control'));
 
         $response = new Response('foo');
         $ssi->addSurrogateControl($response);
-        $this->assertEquals('', $response->headers->get('Surrogate-Control'));
+        $this->assertEquals('', $response->headers->getValue('Surrogate-Control'));
     }
 
     public function testNeedsSsiParsing()
@@ -101,7 +101,7 @@ class SsiTest extends TestCase
         $ssi->process($request, $response);
 
         $this->assertEquals('foo <?php echo $this->surrogate->handle($this, \'...\', \'\', false) ?>'."\n", $response->getContent());
-        $this->assertEquals('SSI', $response->headers->get('x-body-eval'));
+        $this->assertEquals('SSI', $response->headers->getValue('x-body-eval'));
 
         $response = new Response('foo <!--#include virtual="foo\'" -->');
         $ssi->process($request, $response);
@@ -140,17 +140,17 @@ class SsiTest extends TestCase
         $response = new Response('foo <!--#include virtual="..." -->');
         $response->headers->set('Surrogate-Control', 'content="SSI/1.0"');
         $ssi->process($request, $response);
-        $this->assertEquals('SSI', $response->headers->get('x-body-eval'));
+        $this->assertEquals('SSI', $response->headers->getValue('x-body-eval'));
 
         $response->headers->set('Surrogate-Control', 'no-store, content="SSI/1.0"');
         $ssi->process($request, $response);
-        $this->assertEquals('SSI', $response->headers->get('x-body-eval'));
-        $this->assertEquals('no-store', $response->headers->get('surrogate-control'));
+        $this->assertEquals('SSI', $response->headers->getValue('x-body-eval'));
+        $this->assertEquals('no-store', $response->headers->getValue('surrogate-control'));
 
         $response->headers->set('Surrogate-Control', 'content="SSI/1.0", no-store');
         $ssi->process($request, $response);
-        $this->assertEquals('SSI', $response->headers->get('x-body-eval'));
-        $this->assertEquals('no-store', $response->headers->get('surrogate-control'));
+        $this->assertEquals('SSI', $response->headers->getValue('x-body-eval'));
+        $this->assertEquals('no-store', $response->headers->getValue('surrogate-control'));
     }
 
     public function testHandle()

@@ -109,18 +109,17 @@ class HeaderBag implements \IteratorAggregate, \Countable
      */
     public function get($key, $default = null, $first = true)
     {
-        // do we trigger an deprecation ?
-        // @trigger_error(sprintf('%s::%s is deprecated since Symfony 4.4, use %s::getFirst() or %s::getAll() instead.', __CLASS__, __METHOD__, __CLASS__, __CLASS__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('%s::%s is deprecated since Symfony 4.4 and will be removed in Symfony 5.0, use %s::getValue() or %s::getValues() instead.', __CLASS__, __METHOD__, __CLASS__, __CLASS__), E_USER_DEPRECATED);
         if (true === $first) {
-            return $this->getFirst($key, $default);
+            return $this->getValue($key, $default);
         }
 
-        return $this->getAll($key, $default);
+        return $this->getValues($key, $default);
     }
 
-    public function getFirst($key, $default = null)
+    public function getValue($key, ?string $default = null)
     {
-        $all = $this->getAll($key, $default);
+        $all = $this->getValues($key, $default);
 
         if (\count($all)) {
             return isset($all[0]) ? $all[0] : null;
@@ -129,7 +128,10 @@ class HeaderBag implements \IteratorAggregate, \Countable
         return $default;
     }
 
-    public function getAll($key, $default = null): array
+    /**
+     * @return string[]
+     */
+    public function getValues($key, ?string $default = null): array
     {
         $key = str_replace('_', '-', strtolower($key));
         $headers = $this->all();
@@ -199,7 +201,7 @@ class HeaderBag implements \IteratorAggregate, \Countable
      */
     public function contains($key, $value)
     {
-        return \in_array($value, $this->get($key, null, false));
+        return \in_array($value, $this->getValues($key, null));
     }
 
     /**
@@ -230,7 +232,7 @@ class HeaderBag implements \IteratorAggregate, \Countable
      */
     public function getDate($key, \DateTime $default = null)
     {
-        if (null === $value = $this->get($key)) {
+        if (null === $value = $this->getValue($key)) {
             return $default;
         }
 

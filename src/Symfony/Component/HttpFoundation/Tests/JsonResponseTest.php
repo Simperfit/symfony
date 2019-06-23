@@ -59,14 +59,14 @@ class JsonResponseTest extends TestCase
     public function testConstructorAddsContentTypeHeader()
     {
         $response = new JsonResponse();
-        $this->assertSame('application/json', $response->headers->get('Content-Type'));
+        $this->assertSame('application/json', $response->headers->getValue('Content-Type'));
     }
 
     public function testConstructorWithCustomHeaders()
     {
         $response = new JsonResponse([], 200, ['ETag' => 'foo']);
-        $this->assertSame('application/json', $response->headers->get('Content-Type'));
-        $this->assertSame('foo', $response->headers->get('ETag'));
+        $this->assertSame('application/json', $response->headers->getValue('Content-Type'));
+        $this->assertSame('foo', $response->headers->getValue('ETag'));
     }
 
     public function testConstructorWithCustomContentType()
@@ -74,7 +74,7 @@ class JsonResponseTest extends TestCase
         $headers = ['Content-Type' => 'application/vnd.acme.blog-v1+json'];
 
         $response = new JsonResponse([], 200, $headers);
-        $this->assertSame('application/vnd.acme.blog-v1+json', $response->headers->get('Content-Type'));
+        $this->assertSame('application/vnd.acme.blog-v1+json', $response->headers->getValue('Content-Type'));
     }
 
     public function testSetJson()
@@ -149,14 +149,14 @@ class JsonResponseTest extends TestCase
     public function testStaticCreateAddsContentTypeHeader()
     {
         $response = JsonResponse::create();
-        $this->assertSame('application/json', $response->headers->get('Content-Type'));
+        $this->assertSame('application/json', $response->headers->getValue('Content-Type'));
     }
 
     public function testStaticCreateWithCustomHeaders()
     {
         $response = JsonResponse::create([], 200, ['ETag' => 'foo']);
-        $this->assertSame('application/json', $response->headers->get('Content-Type'));
-        $this->assertSame('foo', $response->headers->get('ETag'));
+        $this->assertSame('application/json', $response->headers->getValue('Content-Type'));
+        $this->assertSame('foo', $response->headers->getValue('ETag'));
     }
 
     public function testStaticCreateWithCustomContentType()
@@ -164,7 +164,7 @@ class JsonResponseTest extends TestCase
         $headers = ['Content-Type' => 'application/vnd.acme.blog-v1+json'];
 
         $response = JsonResponse::create([], 200, $headers);
-        $this->assertSame('application/vnd.acme.blog-v1+json', $response->headers->get('Content-Type'));
+        $this->assertSame('application/vnd.acme.blog-v1+json', $response->headers->getValue('Content-Type'));
     }
 
     public function testSetCallback()
@@ -172,7 +172,7 @@ class JsonResponseTest extends TestCase
         $response = JsonResponse::create(['foo' => 'bar'])->setCallback('callback');
 
         $this->assertEquals('/**/callback({"foo":"bar"});', $response->getContent());
-        $this->assertEquals('text/javascript', $response->headers->get('Content-Type'));
+        $this->assertEquals('text/javascript', $response->headers->getValue('Content-Type'));
     }
 
     public function testJsonEncodeFlags()

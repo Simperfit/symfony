@@ -280,7 +280,7 @@ class Request
     {
         $request = self::createRequestFromFactory($_GET, $_POST, [], $_COOKIE, $_FILES, $_SERVER);
 
-        if (0 === strpos($request->headers->get('CONTENT_TYPE'), 'application/x-www-form-urlencoded')
+        if (0 === strpos($request->headers->getValue('CONTENT_TYPE'), 'application/x-www-form-urlencoded')
             && \in_array(strtoupper($request->server->get('REQUEST_METHOD', 'GET')), ['PUT', 'DELETE', 'PATCH'])
         ) {
             parse_str($request->getContent(), $data);
@@ -903,7 +903,7 @@ class Request
             $host = $host[0];
         } elseif ($this->isFromTrustedProxy() && $host = $this->getTrustedValues(self::HEADER_X_FORWARDED_HOST)) {
             $host = $host[0];
-        } elseif (!$host = $this->headers->get('HOST')) {
+        } elseif (!$host = $this->headers->getValue('HOST')) {
             return $this->server->get('SERVER_PORT');
         }
 
@@ -927,7 +927,7 @@ class Request
      */
     public function getUser()
     {
-        return $this->headers->get('PHP_AUTH_USER');
+        return $this->headers->getValue('PHP_AUTH_USER');
     }
 
     /**
@@ -937,7 +937,7 @@ class Request
      */
     public function getPassword()
     {
-        return $this->headers->get('PHP_AUTH_PW');
+        return $this->headers->getValue('PHP_AUTH_PW');
     }
 
     /**
@@ -1138,7 +1138,7 @@ class Request
     {
         if ($this->isFromTrustedProxy() && $host = $this->getTrustedValues(self::HEADER_X_FORWARDED_HOST)) {
             $host = $host[0];
-        } elseif (!$host = $this->headers->get('HOST')) {
+        } elseif (!$host = $this->headers->getValue('HOST')) {
             if (!$host = $this->server->get('SERVER_NAME')) {
                 $host = $this->server->get('SERVER_ADDR', '');
             }
@@ -1224,7 +1224,7 @@ class Request
             return $this->method;
         }
 
-        $method = $this->headers->get('X-HTTP-METHOD-OVERRIDE');
+        $method = $this->headers->getValue('X-HTTP-METHOD-OVERRIDE');
 
         if (!$method && self::$httpMethodParameterOverride) {
             $method = $this->request->get('_method', $this->query->get('_method', 'POST'));
@@ -1373,7 +1373,7 @@ class Request
      */
     public function getContentType()
     {
-        return $this->getFormat($this->headers->get('CONTENT_TYPE'));
+        return $this->getFormat($this->headers->getValue('CONTENT_TYPE'));
     }
 
     /**
@@ -1484,7 +1484,7 @@ class Request
     public function getProtocolVersion()
     {
         if ($this->isFromTrustedProxy()) {
-            preg_match('~^(HTTP/)?([1-9]\.[0-9]) ~', $this->headers->get('Via'), $matches);
+            preg_match('~^(HTTP/)?([1-9]\.[0-9]) ~', $this->headers->getValue('Via'), $matches);
 
             if ($matches) {
                 return 'HTTP/'.$matches[2];
@@ -1548,7 +1548,7 @@ class Request
      */
     public function getETags()
     {
-        return preg_split('/\s*,\s*/', $this->headers->get('if_none_match'), null, PREG_SPLIT_NO_EMPTY);
+        return preg_split('/\s*,\s*/', $this->headers->getValue('if_none_match'), null, PREG_SPLIT_NO_EMPTY);
     }
 
     /**
@@ -1556,7 +1556,7 @@ class Request
      */
     public function isNoCache()
     {
-        return $this->headers->hasCacheControlDirective('no-cache') || 'no-cache' == $this->headers->get('Pragma');
+        return $this->headers->hasCacheControlDirective('no-cache') || 'no-cache' == $this->headers->getValue('Pragma');
     }
 
     /**
@@ -1605,7 +1605,7 @@ class Request
             return $this->languages;
         }
 
-        $languages = AcceptHeader::fromString($this->headers->get('Accept-Language'))->all();
+        $languages = AcceptHeader::fromString($this->headers->getValue('Accept-Language'))->all();
         $this->languages = [];
         foreach ($languages as $lang => $acceptHeaderItem) {
             if (false !== strpos($lang, '-')) {
@@ -1645,7 +1645,7 @@ class Request
             return $this->charsets;
         }
 
-        return $this->charsets = array_keys(AcceptHeader::fromString($this->headers->get('Accept-Charset'))->all());
+        return $this->charsets = array_keys(AcceptHeader::fromString($this->headers->getValue('Accept-Charset'))->all());
     }
 
     /**
@@ -1659,7 +1659,7 @@ class Request
             return $this->encodings;
         }
 
-        return $this->encodings = array_keys(AcceptHeader::fromString($this->headers->get('Accept-Encoding'))->all());
+        return $this->encodings = array_keys(AcceptHeader::fromString($this->headers->getValue('Accept-Encoding'))->all());
     }
 
     /**
@@ -1673,7 +1673,7 @@ class Request
             return $this->acceptableContentTypes;
         }
 
-        return $this->acceptableContentTypes = array_keys(AcceptHeader::fromString($this->headers->get('Accept'))->all());
+        return $this->acceptableContentTypes = array_keys(AcceptHeader::fromString($this->headers->getValue('Accept'))->all());
     }
 
     /**
@@ -1688,7 +1688,7 @@ class Request
      */
     public function isXmlHttpRequest()
     {
-        return 'XMLHttpRequest' == $this->headers->get('X-Requested-With');
+        return 'XMLHttpRequest' == $this->headers->getValue('X-Requested-With');
     }
 
     /*
@@ -1959,13 +1959,13 @@ class Request
         $forwardedValues = [];
 
         if ((self::$trustedHeaderSet & $type) && $this->headers->has(self::$trustedHeaders[$type])) {
-            foreach (explode(',', $this->headers->get(self::$trustedHeaders[$type])) as $v) {
+            foreach (explode(',', $this->headers->getValue(self::$trustedHeaders[$type])) as $v) {
                 $clientValues[] = (self::HEADER_X_FORWARDED_PORT === $type ? '0.0.0.0:' : '').trim($v);
             }
         }
 
         if ((self::$trustedHeaderSet & self::HEADER_FORWARDED) && $this->headers->has(self::$trustedHeaders[self::HEADER_FORWARDED])) {
-            $forwarded = $this->headers->get(self::$trustedHeaders[self::HEADER_FORWARDED]);
+            $forwarded = $this->headers->getValue(self::$trustedHeaders[self::HEADER_FORWARDED]);
             $parts = HeaderUtils::split($forwarded, ',;=');
             $forwardedValues = [];
             $param = self::$forwardedParams[$type];

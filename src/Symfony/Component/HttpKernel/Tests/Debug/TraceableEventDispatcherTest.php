@@ -31,7 +31,7 @@ class TraceableEventDispatcherTest extends TestCase
         $response = $kernel->handle($request);
         $kernel->terminate($request, $response);
 
-        $events = $stopwatch->getSectionEvents($response->headers->get('X-Debug-Token'));
+        $events = $stopwatch->getSectionEvents($response->headers->getValue('X-Debug-Token'));
         $this->assertEquals([
             '__section__',
             'kernel.request',

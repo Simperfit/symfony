@@ -48,7 +48,7 @@ class RedirectResponseTest extends TestCase
         $response = new RedirectResponse('foo.bar');
 
         $this->assertTrue($response->headers->has('Location'));
-        $this->assertEquals('foo.bar', $response->headers->get('Location'));
+        $this->assertEquals('foo.bar', $response->headers->getValue('Location'));
     }
 
     public function testGetTargetUrl()

@@ -50,9 +50,9 @@ class ChannelListener implements ListenerInterface
 
         if ('https' === $channel && !$request->isSecure()) {
             if (null !== $this->logger) {
-                if ('https' === $request->headers->get('X-Forwarded-Proto')) {
+                if ('https' === $request->headers->getValue('X-Forwarded-Proto')) {
                     $this->logger->info('Redirecting to HTTPS. ("X-Forwarded-Proto" header is set to "https" - did you set "trusted_proxies" correctly?)');
-                } elseif (false !== strpos($request->headers->get('Forwarded'), 'proto=https')) {
+                } elseif (false !== strpos($request->headers->getValue('Forwarded'), 'proto=https')) {
                     $this->logger->info('Redirecting to HTTPS. ("Forwarded" header is set to "proto=https" - did you set "trusted_proxies" correctly?)');
                 } else {
                     $this->logger->info('Redirecting to HTTPS.');

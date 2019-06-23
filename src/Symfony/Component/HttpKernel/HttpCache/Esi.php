@@ -65,7 +65,7 @@ class Esi extends AbstractSurrogate
      */
     public function process(Request $request, Response $response)
     {
-        $type = $response->headers->get('Content-Type');
+        $type = $response->headers->getValue('Content-Type');
         if (empty($type)) {
             $type = 'text/html';
         }

@@ -47,7 +47,7 @@ class AddLinkHeaderListenerTest extends TestCase
             '</foo>; rel="preload"',
         ];
 
-        $this->assertEquals($expected, $response->headers->get('Link', null, false));
+        $this->assertEquals($expected, $response->headers->getValues('Link', null));
     }
 
     public function testSubscribedEvents()

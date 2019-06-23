@@ -26,7 +26,7 @@ class RetryAuthenticationEntryPointTest extends TestCase
         $response = $entryPoint->start($request);
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
-        $this->assertEquals($expectedUrl, $response->headers->get('Location'));
+        $this->assertEquals($expectedUrl, $response->headers->getValue('Location'));
     }
 
     public function dataForStart()

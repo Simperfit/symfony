@@ -28,7 +28,7 @@
     },
     "conflict": {
         "symfony/console": "<3.4",
-        "symfony/http-foundation": "<3.4"
+        "symfony/http-foundation": "<4.4"
     },
     "suggest": {
         "symfony/http-kernel": "For using the debugging handlers together with the response life cycle of the HTTP kernel.",

@@ -90,7 +90,7 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
             'method' => $request->getMethod(),
             'format' => $request->getRequestFormat(),
             'content' => $content,
-            'content_type' => $response->headers->get('Content-Type', 'text/html'),
+            'content_type' => $response->headers->getValue('Content-Type', 'text/html'),
             'status_text' => isset(Response::$statusTexts[$statusCode]) ? Response::$statusTexts[$statusCode] : '',
             'status_code' => $statusCode,
             'request_query' => $request->query->all(),
@@ -148,7 +148,7 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
             $response->headers->setCookie(new Cookie(
                 'sf_redirect',
                 json_encode([
-                    'token' => $response->headers->get('x-debug-token'),
+                    'token' => $response->headers->getValue('x-debug-token'),
                     'route' => $request->attributes->get('_route', 'n/a'),
                     'method' => $request->getMethod(),
                     'controller' => $this->parseController($request->attributes->get('_controller')),
@@ -162,7 +162,7 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
         $this->data['identifier'] = $this->data['route'] ?: (\is_array($this->data['controller']) ? $this->data['controller']['class'].'::'.$this->data['controller']['method'].'()' : $this->data['controller']);
 
         if ($response->headers->has('x-previous-debug-token')) {
-            $this->data['forward_token'] = $response->headers->get('x-previous-debug-token');
+            $this->data['forward_token'] = $response->headers->getValue('x-previous-debug-token');
         }
     }
 

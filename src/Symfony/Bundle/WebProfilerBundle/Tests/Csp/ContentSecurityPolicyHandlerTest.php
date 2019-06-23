@@ -41,7 +41,7 @@ class ContentSecurityPolicyHandlerTest extends TestCase
         $this->assertFalse($response->headers->has('X-SymfonyProfiler-Style-Nonce'));
 
         foreach ($expectedCsp as $header => $value) {
-            $this->assertSame($value, $response->headers->get($header));
+            $this->assertSame($value, $response->headers->getValue($header));
         }
     }
 

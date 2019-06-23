@@ -291,7 +291,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
 
                 // As per the RFC, invalidate Location and Content-Location URLs if present
                 foreach (['Location', 'Content-Location'] as $header) {
-                    if ($uri = $response->headers->get($header)) {
+                    if ($uri = $response->headers->getValue($header)) {
                         $subRequest = Request::create($uri, 'get', [], [], [], $request->server->all());
 
                         $this->store->invalidate($subRequest);
@@ -382,7 +382,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
         }
 
         // add our cached last-modified validator
-        $subRequest->headers->set('if_modified_since', $entry->headers->get('Last-Modified'));
+        $subRequest->headers->set('if_modified_since', $entry->headers->getValue('Last-Modified'));
 
         // Add our cached etag validator to the environment.
         // We keep the etags from the client to handle the case when the client
@@ -409,7 +409,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
 
             foreach (['Date', 'Expires', 'Cache-Control', 'ETag', 'Last-Modified'] as $name) {
                 if ($response->headers->has($name)) {
-                    $entry->headers->set($name, $response->headers->get($name));
+                    $entry->headers->set($name, $response->headers->getValue($name));
                 }
             }
 
@@ -609,7 +609,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
             ob_start();
 
             if ($response->headers->has('X-Body-File')) {
-                include $response->headers->get('X-Body-File');
+                include $response->headers->getValue('X-Body-File');
             } else {
                 eval('; ?>'.$response->getContent().'<?php ;');
             }
@@ -623,7 +623,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
             // Response does not include possibly dynamic content (ESI, SSI), so we need
             // not handle the content for HEAD requests
             if (!$request->isMethod('HEAD')) {
-                $response->setContent(file_get_contents($response->headers->get('X-Body-File')));
+                $response->setContent(file_get_contents($response->headers->getValue('X-Body-File')));
             }
         } else {
             return;

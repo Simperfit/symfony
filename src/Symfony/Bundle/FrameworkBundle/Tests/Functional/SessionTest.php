@@ -139,7 +139,7 @@ class SessionTest extends WebTestCase
         $client->request('GET', '/cacheable');
 
         $response = $client->getResponse();
-        $this->assertSame('public, s-maxage=100', $response->headers->get('cache-control'));
+        $this->assertSame('public, s-maxage=100', $response->headers->getValue('cache-control'));
     }
 
     public function getConfigs()

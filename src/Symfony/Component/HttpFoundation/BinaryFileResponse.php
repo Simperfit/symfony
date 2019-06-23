@@ -209,7 +209,7 @@ class BinaryFileResponse extends Response
 
         if (self::$trustXSendfileTypeHeader && $request->headers->has('X-Sendfile-Type')) {
             // Use X-Sendfile, do not send any content.
-            $type = $request->headers->get('X-Sendfile-Type');
+            $type = $request->headers->getValue('X-Sendfile-Type');
             $path = $this->file->getRealPath();
             // Fall back to scheme://path for stream wrapped locations.
             if (false === $path) {
@@ -218,7 +218,7 @@ class BinaryFileResponse extends Response
             if ('x-accel-redirect' === strtolower($type)) {
                 // Do X-Accel-Mapping substitutions.
                 // @link http://wiki.nginx.org/X-accel#X-Accel-Redirect
-                $parts = HeaderUtils::split($request->headers->get('X-Accel-Mapping', ''), ',=');
+                $parts = HeaderUtils::split($request->headers->getValue('X-Accel-Mapping', ''), ',=');
                 foreach ($parts as $part) {
                     list($pathPrefix, $location) = $part;
                     if (substr($path, 0, \strlen($pathPrefix)) === $pathPrefix) {
@@ -236,8 +236,8 @@ class BinaryFileResponse extends Response
             }
         } elseif ($request->headers->has('Range')) {
             // Process the range headers.
-            if (!$request->headers->has('If-Range') || $this->hasValidIfRangeHeader($request->headers->get('If-Range'))) {
-                $range = $request->headers->get('Range');
+            if (!$request->headers->has('If-Range') || $this->hasValidIfRangeHeader($request->headers->getValue('If-Range'))) {
+                $range = $request->headers->getValue('Range');
 
                 list($start, $end) = explode('-', substr($range, 6), 2) + [0];
 

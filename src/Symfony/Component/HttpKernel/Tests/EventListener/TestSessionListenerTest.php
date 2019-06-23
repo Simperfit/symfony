@@ -123,7 +123,7 @@ class TestSessionListenerTest extends TestCase
 
         $response = $this->filterResponse(new Request(), HttpKernelInterface::MASTER_REQUEST, $response);
 
-        $this->assertSame($expected, $response->headers->get('Set-Cookie', null, false));
+        $this->assertSame($expected, $response->headers->getValues('Set-Cookie', null));
     }
 
     public function anotherCookieProvider()

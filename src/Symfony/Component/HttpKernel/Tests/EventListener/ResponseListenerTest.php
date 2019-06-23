@@ -48,7 +48,7 @@ class ResponseListenerTest extends TestCase
         $event = new ResponseEvent($this->kernel, new Request(), HttpKernelInterface::SUB_REQUEST, $response);
         $this->dispatcher->dispatch($event, KernelEvents::RESPONSE);
 
-        $this->assertEquals('', $event->getResponse()->headers->get('content-type'));
+        $this->assertEquals('', $event->getResponse()->headers->getValue('content-type'));
     }
 
     public function testFilterSetsNonDefaultCharsetIfNotOverridden()

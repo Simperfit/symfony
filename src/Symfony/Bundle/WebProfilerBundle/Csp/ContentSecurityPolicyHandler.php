@@ -45,15 +45,15 @@ class ContentSecurityPolicyHandler
     {
         if ($request->headers->has('X-SymfonyProfiler-Script-Nonce') && $request->headers->has('X-SymfonyProfiler-Style-Nonce')) {
             return [
-                'csp_script_nonce' => $request->headers->get('X-SymfonyProfiler-Script-Nonce'),
-                'csp_style_nonce' => $request->headers->get('X-SymfonyProfiler-Style-Nonce'),
+                'csp_script_nonce' => $request->headers->getValue('X-SymfonyProfiler-Script-Nonce'),
+                'csp_style_nonce' => $request->headers->getValue('X-SymfonyProfiler-Style-Nonce'),
             ];
         }
 
         if ($response->headers->has('X-SymfonyProfiler-Script-Nonce') && $response->headers->has('X-SymfonyProfiler-Style-Nonce')) {
             return [
-                'csp_script_nonce' => $response->headers->get('X-SymfonyProfiler-Script-Nonce'),
-                'csp_style_nonce' => $response->headers->get('X-SymfonyProfiler-Style-Nonce'),
+                'csp_script_nonce' => $response->headers->getValue('X-SymfonyProfiler-Script-Nonce'),
+                'csp_style_nonce' => $response->headers->getValue('X-SymfonyProfiler-Style-Nonce'),
             ];
         }
 
@@ -255,15 +255,15 @@ class ContentSecurityPolicyHandler
         $headers = [];
 
         if ($response->headers->has('Content-Security-Policy')) {
-            $headers['Content-Security-Policy'] = $this->parseDirectives($response->headers->get('Content-Security-Policy'));
+            $headers['Content-Security-Policy'] = $this->parseDirectives($response->headers->getValue('Content-Security-Policy'));
         }
 
         if ($response->headers->has('Content-Security-Policy-Report-Only')) {
-            $headers['Content-Security-Policy-Report-Only'] = $this->parseDirectives($response->headers->get('Content-Security-Policy-Report-Only'));
+            $headers['Content-Security-Policy-Report-Only'] = $this->parseDirectives($response->headers->getValue('Content-Security-Policy-Report-Only'));
         }
 
         if ($response->headers->has('X-Content-Security-Policy')) {
-            $headers['X-Content-Security-Policy'] = $this->parseDirectives($response->headers->get('X-Content-Security-Policy'));
+            $headers['X-Content-Security-Policy'] = $this->parseDirectives($response->headers->getValue('X-Content-Security-Policy'));
         }
 
         return $headers;

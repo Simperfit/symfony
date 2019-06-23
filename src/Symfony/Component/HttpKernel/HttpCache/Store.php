@@ -191,7 +191,7 @@ class Store implements StoreInterface
 
         // read existing cache entries, remove non-varying, and add this one to the list
         $entries = [];
-        $vary = $response->headers->get('vary');
+        $vary = $response->headers->getValue('vary');
         foreach ($this->getMetadata($key) as $entry) {
             if (!isset($entry[1]['vary'][0])) {
                 $entry[1]['vary'] = [''];

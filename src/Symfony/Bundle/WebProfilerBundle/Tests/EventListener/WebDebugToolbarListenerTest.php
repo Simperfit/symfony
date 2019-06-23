@@ -252,7 +252,7 @@ class WebDebugToolbarListenerTest extends TestCase
         $listener = new WebDebugToolbarListener($this->getTwigMock(), false, WebDebugToolbarListener::ENABLED, $urlGenerator);
         $listener->onKernelResponse($event);
 
-        $this->assertEquals('http://mydomain.com/_profiler/xxxxxxxx', $response->headers->get('X-Debug-Token-Link'));
+        $this->assertEquals('http://mydomain.com/_profiler/xxxxxxxx', $response->headers->getValue('X-Debug-Token-Link'));
     }
 
     public function testThrowingUrlGenerator()
@@ -273,7 +273,7 @@ class WebDebugToolbarListenerTest extends TestCase
         $listener = new WebDebugToolbarListener($this->getTwigMock(), false, WebDebugToolbarListener::ENABLED, $urlGenerator);
         $listener->onKernelResponse($event);
 
-        $this->assertEquals('Exception: foo', $response->headers->get('X-Debug-Error'));
+        $this->assertEquals('Exception: foo', $response->headers->getValue('X-Debug-Error'));
     }
 
     public function testThrowingErrorCleanup()
@@ -294,7 +294,7 @@ class WebDebugToolbarListenerTest extends TestCase
         $listener = new WebDebugToolbarListener($this->getTwigMock(), false, WebDebugToolbarListener::ENABLED, $urlGenerator);
         $listener->onKernelResponse($event);
 
-        $this->assertEquals('Exception: This multiline tabbed text should come out on a single plain line', $response->headers->get('X-Debug-Error'));
+        $this->assertEquals('Exception: This multiline tabbed text should come out on a single plain line', $response->headers->getValue('X-Debug-Error'));
     }
 
     protected function getRequestMock($isXmlHttpRequest = false, $requestFormat = 'html', $hasSession = true)

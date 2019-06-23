@@ -32,7 +32,7 @@ class DisallowRobotsIndexingListenerTest extends TestCase
 
         $listener->onResponse($event);
 
-        $this->assertSame($expected, $response->headers->get('X-Robots-Tag'), 'Header doesn\'t match expectations');
+        $this->assertSame($expected, $response->headers->getValue('X-Robots-Tag'), 'Header doesn\'t match expectations');
     }
 
     public function provideResponses(): iterable

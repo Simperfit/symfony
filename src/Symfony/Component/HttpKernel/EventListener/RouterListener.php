@@ -134,7 +134,7 @@ class RouterListener implements EventSubscriberInterface
         } catch (ResourceNotFoundException $e) {
             $message = sprintf('No route found for "%s %s"', $request->getMethod(), $request->getPathInfo());
 
-            if ($referer = $request->headers->get('referer')) {
+            if ($referer = $request->headers->getValue('referer')) {
                 $message .= sprintf(' (from "%s")', $referer);
             }
 

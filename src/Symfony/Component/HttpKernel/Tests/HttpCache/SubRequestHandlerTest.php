@@ -46,9 +46,9 @@ class SubRequestHandlerTest extends TestCase
         $kernel = new TestSubRequestHandlerKernel(function ($request, $type, $catch) {
             $this->assertSame('127.0.0.1', $request->server->get('REMOTE_ADDR'));
             $this->assertSame('10.0.0.2', $request->getClientIp());
-            $this->assertSame('Good', $request->headers->get('X-Forwarded-Host'));
-            $this->assertSame('1234', $request->headers->get('X-Forwarded-Port'));
-            $this->assertSame('https', $request->headers->get('X-Forwarded-Proto'));
+            $this->assertSame('Good', $request->headers->getValue('X-Forwarded-Host'));
+            $this->assertSame('1234', $request->headers->getValue('X-Forwarded-Port'));
+            $this->assertSame('https', $request->headers->getValue('X-Forwarded-Proto'));
         });
 
         SubRequestHandler::handle($kernel, $request, HttpKernelInterface::MASTER_REQUEST, true);
@@ -72,7 +72,7 @@ class SubRequestHandlerTest extends TestCase
             $this->assertFalse($request->headers->has('X-Forwarded-Host'));
             $this->assertFalse($request->headers->has('X-Forwarded-Port'));
             $this->assertFalse($request->headers->has('X-Forwarded-Proto'));
-            $this->assertSame('for="10.0.0.1";host="localhost";proto=http', $request->headers->get('Forwarded'));
+            $this->assertSame('for="10.0.0.1";host="localhost";proto=http', $request->headers->getValue('Forwarded'));
         });
 
         SubRequestHandler::handle($kernel, $request, HttpKernelInterface::MASTER_REQUEST, true);

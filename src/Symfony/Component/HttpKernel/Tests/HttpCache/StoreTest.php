@@ -126,8 +126,8 @@ class StoreTest extends TestCase
     public function testDoesNotFindAnEntryWithLookupWhenTheBodyDoesNotExist()
     {
         $this->storeSimpleEntry();
-        $this->assertNotNull($this->response->headers->get('X-Content-Digest'));
-        $path = $this->getStorePath($this->response->headers->get('X-Content-Digest'));
+        $this->assertNotNull($this->response->headers->getValue('X-Content-Digest'));
+        $path = $this->getStorePath($this->response->headers->getValue('X-Content-Digest'));
         @unlink($path);
         $this->assertNull($this->store->lookup($this->request));
     }
@@ -137,7 +137,7 @@ class StoreTest extends TestCase
         $this->storeSimpleEntry();
         $response = $this->store->lookup($this->request);
 
-        $this->assertEquals($response->headers->all(), array_merge(['content-length' => 4, 'x-body-file' => [$this->getStorePath($response->headers->get('X-Content-Digest'))]], $this->response->headers->all()));
+        $this->assertEquals($response->headers->all(), array_merge(['content-length' => 4, 'x-body-file' => [$this->getStorePath($response->headers->getValue('X-Content-Digest'))]], $this->response->headers->all()));
     }
 
     public function testRestoresResponseContentFromEntityStoreWithLookup()

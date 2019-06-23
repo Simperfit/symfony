@@ -26,7 +26,7 @@ class ResponseTest extends ResponseTestCase
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertEquals(301, $response->getStatusCode());
-        $this->assertEquals('bar', $response->headers->get('foo'));
+        $this->assertEquals('bar', $response->headers->getValue('foo'));
     }
 
     public function testToString()
@@ -317,7 +317,7 @@ class ResponseTest extends ResponseTestCase
         $response = new Response();
         $response->setSharedMaxAge(20);
 
-        $cacheControl = $response->headers->get('Cache-Control');
+        $cacheControl = $response->headers->getValue('Cache-Control');
         $this->assertEquals('public, s-maxage=20', $cacheControl);
     }
 
@@ -342,18 +342,18 @@ class ResponseTest extends ResponseTestCase
         $response = new Response();
         $response->headers->set('Cache-Control', 'max-age=100');
         $response->expire();
-        $this->assertEquals(100, $response->headers->get('Age'), '->expire() sets the Age to max-age when present');
+        $this->assertEquals(100, $response->headers->getValue('Age'), '->expire() sets the Age to max-age when present');
 
         $response = new Response();
         $response->headers->set('Cache-Control', 'max-age=100, s-maxage=500');
         $response->expire();
-        $this->assertEquals(500, $response->headers->get('Age'), '->expire() sets the Age to s-maxage when both max-age and s-maxage are present');
+        $this->assertEquals(500, $response->headers->getValue('Age'), '->expire() sets the Age to s-maxage when both max-age and s-maxage are present');
 
         $response = new Response();
         $response->headers->set('Cache-Control', 'max-age=5, s-maxage=500');
         $response->headers->set('Age', '1000');
         $response->expire();
-        $this->assertEquals(1000, $response->headers->get('Age'), '->expire() does nothing when the response is already stale/expired');
+        $this->assertEquals(1000, $response->headers->getValue('Age'), '->expire() does nothing when the response is already stale/expired');
 
         $response = new Response();
         $response->expire();
@@ -362,12 +362,12 @@ class ResponseTest extends ResponseTestCase
         $response = new Response();
         $response->headers->set('Expires', -1);
         $response->expire();
-        $this->assertNull($response->headers->get('Age'), '->expire() does not set the Age when the response is expired');
+        $this->assertNull($response->headers->getValue('Age'), '->expire() does not set the Age when the response is expired');
 
         $response = new Response();
         $response->headers->set('Expires', date(DATE_RFC2822, time() + 600));
         $response->expire();
-        $this->assertNull($response->headers->get('Expires'), '->expire() removes the Expires header when the response is fresh');
+        $this->assertNull($response->headers->getValue('Expires'), '->expire() removes the Expires header when the response is fresh');
     }
 
     public function testGetTtl()
@@ -477,7 +477,7 @@ class ResponseTest extends ResponseTestCase
         // force fixContentType() to be called
         $response->prepare(new Request());
 
-        $this->assertEquals('text/css; charset=UTF-8', $response->headers->get('Content-Type'));
+        $this->assertEquals('text/css; charset=UTF-8', $response->headers->getValue('Content-Type'));
     }
 
     public function testPrepareDoesNothingIfContentTypeIsSet()
@@ -487,7 +487,7 @@ class ResponseTest extends ResponseTestCase
 
         $response->prepare(new Request());
 
-        $this->assertEquals('text/plain; charset=UTF-8', $response->headers->get('content-type'));
+        $this->assertEquals('text/plain; charset=UTF-8', $response->headers->getValue('content-type'));
     }
 
     public function testPrepareDoesNothingIfRequestFormatIsNotDefined()
@@ -496,7 +496,7 @@ class ResponseTest extends ResponseTestCase
 
         $response->prepare(new Request());
 
-        $this->assertEquals('text/html; charset=UTF-8', $response->headers->get('content-type'));
+        $this->assertEquals('text/html; charset=UTF-8', $response->headers->getValue('content-type'));
     }
 
     public function testPrepareSetContentType()
@@ -507,7 +507,7 @@ class ResponseTest extends ResponseTestCase
 
         $response->prepare($request);
 
-        $this->assertEquals('application/json', $response->headers->get('content-type'));
+        $this->assertEquals('application/json', $response->headers->getValue('content-type'));
     }
 
     public function testPrepareRemovesContentForHeadRequests()
@@ -520,7 +520,7 @@ class ResponseTest extends ResponseTestCase
         $response->prepare($request);
 
         $this->assertEquals('', $response->getContent());
-        $this->assertEquals($length, $response->headers->get('Content-Length'), 'Content-Length should be as if it was GET; see RFC2616 14.13');
+        $this->assertEquals($length, $response->headers->getValue('Content-Length'), 'Content-Length should be as if it was GET; see RFC2616 14.13');
     }
 
     public function testPrepareRemovesContentForInformationalResponse()
@@ -550,7 +550,7 @@ class ResponseTest extends ResponseTestCase
 
         $response->headers->set('Content-Length', 12345);
         $response->prepare($request);
-        $this->assertEquals(12345, $response->headers->get('Content-Length'));
+        $this->assertEquals(12345, $response->headers->getValue('Content-Length'));
 
         $response->headers->set('Transfer-Encoding', 'chunked');
         $response->prepare($request);
@@ -564,8 +564,8 @@ class ResponseTest extends ResponseTestCase
 
         $response = new Response('foo');
         $response->prepare($request);
-        $this->assertEquals('no-cache', $response->headers->get('pragma'));
-        $this->assertEquals('-1', $response->headers->get('expires'));
+        $this->assertEquals('no-cache', $response->headers->getValue('pragma'));
+        $this->assertEquals('-1', $response->headers->getValue('expires'));
 
         $request->server->set('SERVER_PROTOCOL', 'HTTP/1.1');
         $response = new Response('foo');
@@ -887,7 +887,7 @@ class ResponseTest extends ResponseTestCase
         $response = new Response('', 200, ['ETag' => '"12345"']);
         $response->setEtag();
 
-        $this->assertNull($response->headers->get('Etag'), '->setEtag() removes Etags when call with null');
+        $this->assertNull($response->headers->getValue('Etag'), '->setEtag() removes Etags when call with null');
     }
 
     /**

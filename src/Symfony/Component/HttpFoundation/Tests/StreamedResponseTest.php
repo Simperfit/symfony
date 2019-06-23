@@ -22,7 +22,7 @@ class StreamedResponseTest extends TestCase
         $response = new StreamedResponse(function () { echo 'foo'; }, 404, ['Content-Type' => 'text/plain']);
 
         $this->assertEquals(404, $response->getStatusCode());
-        $this->assertEquals('text/plain', $response->headers->get('Content-Type'));
+        $this->assertEquals('text/plain', $response->headers->getValue('Content-Type'));
     }
 
     public function testPrepareWith11Protocol()
@@ -34,7 +34,7 @@ class StreamedResponseTest extends TestCase
         $response->prepare($request);
 
         $this->assertEquals('1.1', $response->getProtocolVersion());
-        $this->assertNotEquals('chunked', $response->headers->get('Transfer-Encoding'), 'Apache assumes responses with a Transfer-Encoding header set to chunked to already be encoded.');
+        $this->assertNotEquals('chunked', $response->headers->getValue('Transfer-Encoding'), 'Apache assumes responses with a Transfer-Encoding header set to chunked to already be encoded.');
     }
 
     public function testPrepareWith10Protocol()
@@ -46,7 +46,7 @@ class StreamedResponseTest extends TestCase
         $response->prepare($request);
 
         $this->assertEquals('1.0', $response->getProtocolVersion());
-        $this->assertNull($response->headers->get('Transfer-Encoding'));
+        $this->assertNull($response->headers->getValue('Transfer-Encoding'));
     }
 
     public function testPrepareWithHeadRequest()
@@ -56,7 +56,7 @@ class StreamedResponseTest extends TestCase
 
         $response->prepare($request);
 
-        $this->assertSame('123', $response->headers->get('Content-Length'));
+        $this->assertSame('123', $response->headers->getValue('Content-Length'));
     }
 
     public function testPrepareWithCacheHeaders()
@@ -65,7 +65,7 @@ class StreamedResponseTest extends TestCase
         $request = Request::create('/', 'GET');
 
         $response->prepare($request);
-        $this->assertEquals('max-age=600, public', $response->headers->get('Cache-Control'));
+        $this->assertEquals('max-age=600, public', $response->headers->getValue('Cache-Control'));
     }
 
     public function testSendContent()

@@ -34,7 +34,7 @@ class SurrogateListenerTest extends TestCase
         $event = new ResponseEvent($kernel, new Request(), HttpKernelInterface::SUB_REQUEST, $response);
         $dispatcher->dispatch($event, KernelEvents::RESPONSE);
 
-        $this->assertEquals('', $event->getResponse()->headers->get('Surrogate-Control'));
+        $this->assertEquals('', $event->getResponse()->headers->getValue('Surrogate-Control'));
     }
 
     public function testFilterWhenThereIsSomeEsiIncludes()
@@ -48,7 +48,7 @@ class SurrogateListenerTest extends TestCase
         $event = new ResponseEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST, $response);
         $dispatcher->dispatch($event, KernelEvents::RESPONSE);
 
-        $this->assertEquals('content="ESI/1.0"', $event->getResponse()->headers->get('Surrogate-Control'));
+        $this->assertEquals('content="ESI/1.0"', $event->getResponse()->headers->getValue('Surrogate-Control'));
     }
 
     public function testFilterWhenThereIsNoEsiIncludes()
@@ -62,6 +62,6 @@ class SurrogateListenerTest extends TestCase
         $event = new ResponseEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST, $response);
         $dispatcher->dispatch($event, KernelEvents::RESPONSE);
 
-        $this->assertEquals('', $event->getResponse()->headers->get('Surrogate-Control'));
+        $this->assertEquals('', $event->getResponse()->headers->getValue('Surrogate-Control'));
     }
 }

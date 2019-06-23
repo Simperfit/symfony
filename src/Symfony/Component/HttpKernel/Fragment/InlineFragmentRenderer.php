@@ -116,7 +116,7 @@ class InlineFragmentRenderer extends RoutableFragmentRenderer
 
         $subRequest = Request::create($uri, 'get', [], $cookies, [], $server);
         if ($request->headers->has('Surrogate-Capability')) {
-            $subRequest->headers->set('Surrogate-Capability', $request->headers->get('Surrogate-Capability'));
+            $subRequest->headers->set('Surrogate-Capability', $request->headers->getValue('Surrogate-Capability'));
         }
 
         static $setSession;

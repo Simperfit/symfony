@@ -280,9 +280,9 @@ class Response
             $charset = $this->charset ?: 'UTF-8';
             if (!$headers->has('Content-Type')) {
                 $headers->set('Content-Type', 'text/html; charset='.$charset);
-            } elseif (0 === stripos($headers->get('Content-Type'), 'text/') && false === stripos($headers->get('Content-Type'), 'charset')) {
+            } elseif (0 === stripos($headers->getValue('Content-Type'), 'text/') && false === stripos($headers->getValue('Content-Type'), 'charset')) {
                 // add the charset
-                $headers->set('Content-Type', $headers->get('Content-Type').'; charset='.$charset);
+                $headers->set('Content-Type', $headers->getValue('Content-Type').'; charset='.$charset);
             }
 
             // Fix Content-Length
@@ -292,7 +292,7 @@ class Response
 
             if ($request->isMethod('HEAD')) {
                 // cf. RFC2616 14.13
-                $length = $headers->get('Content-Length');
+                $length = $headers->getValue('Content-Length');
                 $this->setContent(null);
                 if ($length) {
                     $headers->set('Content-Length', $length);
@@ -306,7 +306,7 @@ class Response
         }
 
         // Check if we need to send extra expire info headers
-        if ('1.0' == $this->getProtocolVersion() && false !== strpos($headers->get('Cache-Control'), 'no-cache')) {
+        if ('1.0' == $this->getProtocolVersion() && false !== strpos($headers->getValue('Cache-Control'), 'no-cache')) {
             $headers->set('pragma', 'no-cache');
             $headers->set('expires', -1);
         }
@@ -680,7 +680,7 @@ class Response
      */
     public function getAge(): int
     {
-        if (null !== $age = $this->headers->get('Age')) {
+        if (null !== $age = $this->headers->getValue('Age')) {
             return (int) $age;
         }
 
@@ -898,7 +898,7 @@ class Response
      */
     public function getEtag(): ?string
     {
-        return $this->headers->get('ETag');
+        return $this->headers->getValue('ETag');
     }
 
     /**
@@ -1014,7 +1014,7 @@ class Response
      */
     public function hasVary(): bool
     {
-        return null !== $this->headers->get('Vary');
+        return null !== $this->headers->getValue('Vary');
     }
 
     /**
@@ -1024,7 +1024,7 @@ class Response
      */
     public function getVary(): array
     {
-        if (!$vary = $this->headers->get('Vary', null, false)) {
+        if (!$vary = $this->headers->getValues('Vary', null)) {
             return [];
         }
 
@@ -1071,8 +1071,8 @@ class Response
         }
 
         $notModified = false;
-        $lastModified = $this->headers->get('Last-Modified');
-        $modifiedSince = $request->headers->get('If-Modified-Since');
+        $lastModified = $this->headers->getValue('Last-Modified');
+        $modifiedSince = $request->headers->getValue('If-Modified-Since');
 
         if ($etags = $request->getETags()) {
             $notModified = \in_array($this->getEtag(), $etags) || \in_array('*', $etags);
@@ -1188,7 +1188,7 @@ class Response
      */
     public function isRedirect(string $location = null): bool
     {
-        return \in_array($this->statusCode, [201, 301, 302, 303, 307, 308]) && (null === $location ?: $location == $this->headers->get('Location'));
+        return \in_array($this->statusCode, [201, 301, 302, 303, 307, 308]) && (null === $location ?: $location == $this->headers->getValue('Location'));
     }
 
     /**
@@ -1232,7 +1232,7 @@ class Response
      */
     protected function ensureIEOverSSLCompatibility(Request $request)
     {
-        if (false !== stripos($this->headers->get('Content-Disposition'), 'attachment') && 1 == preg_match('/MSIE (.*?);/i', $request->server->get('HTTP_USER_AGENT'), $match) && true === $request->isSecure()) {
+        if (false !== stripos($this->headers->getValue('Content-Disposition'), 'attachment') && 1 == preg_match('/MSIE (.*?);/i', $request->server->get('HTTP_USER_AGENT'), $match) && true === $request->isSecure()) {
             if ((int) preg_replace('/(MSIE )(.*?);/', '$2', $match[0]) < 9) {
                 $this->headers->remove('Cache-Control');
             }

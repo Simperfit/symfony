@@ -86,31 +86,39 @@ class HeaderBagTest extends TestCase
     public function testGet()
     {
         $bag = new HeaderBag(['foo' => 'bar', 'fuzz' => 'bizz']);
-        $this->assertEquals('bar', $bag->get('foo'), '->get return current value');
-        $this->assertEquals('bar', $bag->get('FoO'), '->get key in case insensitive');
-        $this->assertEquals(['bar'], $bag->get('foo', 'nope', false), '->get return the value as array');
+        $this->assertEquals('bar', $bag->getValue('foo'), '->get return current value');
+        $this->assertEquals('bar', $bag->getValue('FoO'), '->get key in case insensitive');
+        $this->assertEquals(['bar'], $bag->getValues('foo', 'nope'), '->get return the value as array');
 
         // defaults
-        $this->assertNull($bag->get('none'), '->get unknown values returns null');
-        $this->assertEquals('default', $bag->get('none', 'default'), '->get unknown values returns default');
-        $this->assertEquals($bag->getFirst('none', 'default'), $bag->get('none', 'default'), '->get unknown values returns default as array');
+        $this->assertNull($bag->getValue('none'), '->get unknown values returns null');
+        $this->assertEquals('default', $bag->getValue('none', 'default'), '->get unknown values returns default');
 
-        $this->assertEquals(['default'], $bag->get('none', 'default', false), '->get unknown values returns default as array');
-        $this->assertEquals($bag->getAll('none', 'default'), $bag->get('none', 'default', false), '->get unknown values returns default as array');
+        $this->assertEquals(['default'], $bag->getValues('none', 'default'), '->get unknown values returns default as array');
 
         $bag->set('foo', 'bor', false);
-        $this->assertEquals('bar', $bag->get('foo'), '->get return first value');
-        $this->assertEquals($bag->getAll('foo', 'nope'), $bag->get('foo', 'nope', false), '->get return all values as array');
+        $this->assertEquals('bar', $bag->getValue('foo'), '->get return first value');
 
-        $this->assertEquals(['bar', 'bor'], $bag->get('foo', 'nope', false), '->get return all values as array');
+        $this->assertEquals(['bar', 'bor'], $bag->getValues('foo', 'nope'), '->get return all values as array');
+    }
+
+    /**
+     * @group legacy
+     * @expectedDeprecation  Symfony\Component\HttpFoundation\HeaderBag::Symfony\Component\HttpFoundation\HeaderBag::get is deprecated since Symfony 4.4 and will be removed in Symfony 5.0, use Symfony\Component\HttpFoundation\HeaderBag::getValue() or Symfony\Component\HttpFoundation\HeaderBag::getValues() instead.
+     */
+    public function testGetIsEqualToNewMethod()
+    {
+        $bag = new HeaderBag(['foo' => 'bar', 'fuzz' => 'bizz']);
+        $this->assertEquals($bag->getValue('none', 'default'), $bag->get('none', 'default'), '->get unknown values returns default as array');
+        $this->assertEquals($bag->getValues('none', 'default'), $bag->get('none', 'default', false), '->get unknown values returns default as array');
     }
 
     public function testSetAssociativeArray()
     {
         $bag = new HeaderBag();
         $bag->set('foo', ['bad-assoc-index' => 'value']);
-        $this->assertSame('value', $bag->get('foo'));
-        $this->assertEquals(['value'], $bag->get('foo', 'nope', false), 'assoc indices of multi-valued headers are ignored');
+        $this->assertSame('value', $bag->getValue('foo'));
+        $this->assertEquals(['value'], $bag->getValues('foo', 'nope'), 'assoc indices of multi-valued headers are ignored');
     }
 
     public function testContains()
@@ -135,12 +143,12 @@ class HeaderBagTest extends TestCase
 
         $this->assertTrue($bag->hasCacheControlDirective('public'));
         $this->assertTrue($bag->getCacheControlDirective('public'));
-        $this->assertEquals('public', $bag->get('cache-control'));
+        $this->assertEquals('public', $bag->getValue('cache-control'));
 
         $bag->addCacheControlDirective('max-age', 10);
         $this->assertTrue($bag->hasCacheControlDirective('max-age'));
         $this->assertEquals(10, $bag->getCacheControlDirective('max-age'));
-        $this->assertEquals('max-age=10, public', $bag->get('cache-control'));
+        $this->assertEquals('max-age=10, public', $bag->getValue('cache-control'));
 
         $bag->removeCacheControlDirective('max-age');
         $this->assertFalse($bag->hasCacheControlDirective('max-age'));
@@ -156,7 +164,7 @@ class HeaderBagTest extends TestCase
         $this->assertEquals(10, $bag->getCacheControlDirective('max-age'));
 
         $bag->addCacheControlDirective('s-maxage', 100);
-        $this->assertEquals('max-age=10, public, s-maxage=100', $bag->get('cache-control'));
+        $this->assertEquals('max-age=10, public, s-maxage=100', $bag->getValue('cache-control'));
     }
 
     public function testCacheControlDirectiveParsingQuotedZero()

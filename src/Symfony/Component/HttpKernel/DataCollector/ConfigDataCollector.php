@@ -60,7 +60,7 @@ class ConfigDataCollector extends DataCollector implements LateDataCollectorInte
         $this->data = [
             'app_name' => $this->name,
             'app_version' => $this->version,
-            'token' => $response->headers->get('X-Debug-Token'),
+            'token' => $response->headers->getValue('X-Debug-Token'),
             'symfony_version' => Kernel::VERSION,
             'symfony_state' => 'unknown',
             'env' => isset($this->kernel) ? $this->kernel->getEnvironment() : 'n/a',

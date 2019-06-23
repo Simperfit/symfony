@@ -39,7 +39,7 @@ class RequestTest extends TestCase
         $this->assertEquals('bar', $request->attributes->get('foo'), '->initialize() takes an array of attributes as its third argument');
 
         $request->initialize([], [], [], [], [], ['HTTP_FOO' => 'bar']);
-        $this->assertEquals('bar', $request->headers->get('FOO'), '->initialize() takes an array of HTTP headers as its sixth argument');
+        $this->assertEquals('bar', $request->headers->getValue('FOO'), '->initialize() takes an array of HTTP headers as its sixth argument');
     }
 
     public function testGetLocale()
@@ -350,7 +350,7 @@ class RequestTest extends TestCase
         $this->assertEquals('fabien', $request->getUser());
         $this->assertEquals('pa$$', $request->getPassword());
         $this->assertEquals('', $request->getQueryString());
-        $this->assertEquals('application/json', $request->headers->get('CONTENT_TYPE'));
+        $this->assertEquals('application/json', $request->headers->getValue('CONTENT_TYPE'));
 
         // URI has precedence over server
         $request = Request::create('http://thomas:pokemon@example.net:8080/?foo=bar', 'GET', [], [], [], [

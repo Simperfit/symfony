@@ -93,7 +93,7 @@ class HttpKernelTest extends TestCase
         $response = $kernel->handle(new Request());
 
         $this->assertEquals('301', $response->getStatusCode());
-        $this->assertEquals('/login', $response->headers->get('Location'));
+        $this->assertEquals('/login', $response->headers->getValue('Location'));
     }
 
     public function testHandleHttpException()
@@ -107,7 +107,7 @@ class HttpKernelTest extends TestCase
         $response = $kernel->handle(new Request());
 
         $this->assertEquals('405', $response->getStatusCode());
-        $this->assertEquals('POST', $response->headers->get('Allow'));
+        $this->assertEquals('POST', $response->headers->getValue('Allow'));
     }
 
     public function getStatusCodes()

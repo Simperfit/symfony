@@ -58,7 +58,7 @@ interface AuthenticatorInterface extends AuthenticationEntryPointInterface
      *
      * Or for an API token that's on a header, you might use:
      *
-     *      return ['api_key' => $request->headers->get('X-API-TOKEN')];
+     *      return ['api_key' => $request->headers->getValue('X-API-TOKEN')];
      *
      * @param Request $request
      *

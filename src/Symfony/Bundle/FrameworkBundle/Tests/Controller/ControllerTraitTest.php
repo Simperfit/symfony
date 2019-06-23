@@ -186,11 +186,11 @@ abstract class ControllerTraitTest extends TestCase
         $response = $controller->file(new File(__FILE__));
         $this->assertInstanceOf(BinaryFileResponse::class, $response);
         $this->assertSame(200, $response->getStatusCode());
-        if ($response->headers->get('content-type')) {
-            $this->assertSame('text/x-php', $response->headers->get('content-type'));
+        if ($response->headers->getValue('content-type')) {
+            $this->assertSame('text/x-php', $response->headers->getValue('content-type'));
         }
-        $this->assertContains(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $response->headers->get('content-disposition'));
-        $this->assertContains(basename(__FILE__), $response->headers->get('content-disposition'));
+        $this->assertContains(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $response->headers->getValue('content-disposition'));
+        $this->assertContains(basename(__FILE__), $response->headers->getValue('content-disposition'));
     }
 
     public function testFileAsInline()
@@ -202,11 +202,11 @@ abstract class ControllerTraitTest extends TestCase
 
         $this->assertInstanceOf(BinaryFileResponse::class, $response);
         $this->assertSame(200, $response->getStatusCode());
-        if ($response->headers->get('content-type')) {
-            $this->assertSame('text/x-php', $response->headers->get('content-type'));
+        if ($response->headers->getValue('content-type')) {
+            $this->assertSame('text/x-php', $response->headers->getValue('content-type'));
         }
-        $this->assertContains(ResponseHeaderBag::DISPOSITION_INLINE, $response->headers->get('content-disposition'));
-        $this->assertContains(basename(__FILE__), $response->headers->get('content-disposition'));
+        $this->assertContains(ResponseHeaderBag::DISPOSITION_INLINE, $response->headers->getValue('content-disposition'));
+        $this->assertContains(basename(__FILE__), $response->headers->getValue('content-disposition'));
     }
 
     public function testFileWithOwnFileName()
@@ -219,11 +219,11 @@ abstract class ControllerTraitTest extends TestCase
 
         $this->assertInstanceOf(BinaryFileResponse::class, $response);
         $this->assertSame(200, $response->getStatusCode());
-        if ($response->headers->get('content-type')) {
-            $this->assertSame('text/x-php', $response->headers->get('content-type'));
+        if ($response->headers->getValue('content-type')) {
+            $this->assertSame('text/x-php', $response->headers->getValue('content-type'));
         }
-        $this->assertContains(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $response->headers->get('content-disposition'));
-        $this->assertContains($fileName, $response->headers->get('content-disposition'));
+        $this->assertContains(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $response->headers->getValue('content-disposition'));
+        $this->assertContains($fileName, $response->headers->getValue('content-disposition'));
     }
 
     public function testFileWithOwnFileNameAsInline()
@@ -236,11 +236,11 @@ abstract class ControllerTraitTest extends TestCase
 
         $this->assertInstanceOf(BinaryFileResponse::class, $response);
         $this->assertSame(200, $response->getStatusCode());
-        if ($response->headers->get('content-type')) {
-            $this->assertSame('text/x-php', $response->headers->get('content-type'));
+        if ($response->headers->getValue('content-type')) {
+            $this->assertSame('text/x-php', $response->headers->getValue('content-type'));
         }
-        $this->assertContains(ResponseHeaderBag::DISPOSITION_INLINE, $response->headers->get('content-disposition'));
-        $this->assertContains($fileName, $response->headers->get('content-disposition'));
+        $this->assertContains(ResponseHeaderBag::DISPOSITION_INLINE, $response->headers->getValue('content-disposition'));
+        $this->assertContains($fileName, $response->headers->getValue('content-disposition'));
     }
 
     public function testFileFromPath()
@@ -252,11 +252,11 @@ abstract class ControllerTraitTest extends TestCase
 
         $this->assertInstanceOf(BinaryFileResponse::class, $response);
         $this->assertSame(200, $response->getStatusCode());
-        if ($response->headers->get('content-type')) {
-            $this->assertSame('text/x-php', $response->headers->get('content-type'));
+        if ($response->headers->getValue('content-type')) {
+            $this->assertSame('text/x-php', $response->headers->getValue('content-type'));
         }
-        $this->assertContains(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $response->headers->get('content-disposition'));
-        $this->assertContains(basename(__FILE__), $response->headers->get('content-disposition'));
+        $this->assertContains(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $response->headers->getValue('content-disposition'));
+        $this->assertContains(basename(__FILE__), $response->headers->getValue('content-disposition'));
     }
 
     public function testFileFromPathWithCustomizedFileName()
@@ -268,11 +268,11 @@ abstract class ControllerTraitTest extends TestCase
 
         $this->assertInstanceOf(BinaryFileResponse::class, $response);
         $this->assertSame(200, $response->getStatusCode());
-        if ($response->headers->get('content-type')) {
-            $this->assertSame('text/x-php', $response->headers->get('content-type'));
+        if ($response->headers->getValue('content-type')) {
+            $this->assertSame('text/x-php', $response->headers->getValue('content-type'));
         }
-        $this->assertContains(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $response->headers->get('content-disposition'));
-        $this->assertContains('test.php', $response->headers->get('content-disposition'));
+        $this->assertContains(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $response->headers->getValue('content-disposition'));
+        $this->assertContains('test.php', $response->headers->getValue('content-disposition'));
     }
 
     /**
